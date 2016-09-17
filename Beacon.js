@@ -47,7 +47,7 @@ router.route('/discounts')
     .fetch()
     .then(function(collection){
       res.json({error: false, data: collection.toJSON()});
-
+      console.log('Trying push...');
       //Sending push...
       var note = new apn.Notification();
 
