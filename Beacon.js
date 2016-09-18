@@ -73,7 +73,8 @@ router.route('/pushTest')
     }else {
       console.log(beaconID);
       console.log(placesByBeacons["15212:31506"]);
-      console.log(placesByBeacons[String(beaconID)]);
+      beaconID = String(beaconID);
+      console.log(placesByBeacons[beaconID]);
       Discount.forge({region: placesByBeacons[beaconID]})
       .fetch()
       .then(function (discount) {
