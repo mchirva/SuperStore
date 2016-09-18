@@ -64,7 +64,7 @@ function sendPushForDevice(withToken, pushMessage, callback){
   //Push ends here ...
 }
 
-router.route('/pushTest')
+router.route('/push')
   .post(function(req, res){
     var token = req.body.dToken;
     var beaconID = req.body.beaconID;
@@ -77,7 +77,7 @@ router.route('/pushTest')
       Discount.forge({region: placesByBeacons["15212:31506"]})
       .fetch()
       .then(function (discount) {
-        var pushMessage = new push.PushMessage('New message from beacon', {'messageFrom': 'Falcon2'});
+        var pushMessage = new push.PushMessage('New message from beacon', discount.toJSON());
         sendPushForDevice(token, pushMessage, function() {
           res.json({error: false, data: {message: 'Push sent!'}});
         });
