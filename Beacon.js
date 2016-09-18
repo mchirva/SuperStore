@@ -57,12 +57,11 @@ function sendPushForDevice(withToken, pushMessage, callback){
   note.badge = pushMessage.badge;
   note.sound = pushMessage.sound;
   note.alert = pushMessage.alert;
-  console.log(pushMessage.alert);
   note.payload = pushMessage.payload;
 
   apnConnection.pushNotification(note, myDevice);
   callback();
-  //Push end here ...
+  //Push ends here ...
 }
 
 router.route('/pushTest')
@@ -72,10 +71,17 @@ router.route('/pushTest')
     if(!token){
       res.json({error: true, data: {message: 'Push failed!'}});
     }else {
-      var pushMessage = new push.PushMessage('New message from beacon', {'messageFrom': 'Falcon2'});
-      sendPushForDevice(token, pushMessage, function() {
-        res.json({error: false, data: {message: 'Push sent!'}});
-      });
+      Discount.forge({region: placesByBeacons[beaconID]})
+      .fetch()
+      .then(function (discount) {
+        var pushMessage = new push.PushMessage('New message from beacon', {'messageFrom': 'Falcon2'});
+        sendPushForDevice(token, pushMessage, function() {
+          res.json({error: false, data: {message: 'Push sent!'}});
+        });
+      })
+      .catch(function (err){
+        res.status(500).json({error: true, data: {message: err.message}});
+      })
     }
   });
 
