@@ -55,8 +55,9 @@ function sendPushForDevice(withToken){
 }
 
 router.route('/pushTest')
-  .get(function(req, res){
-    var token = req.params.dToken;
+  .post(function(req, res){
+    var token = req.body.dToken;
+    console.log(token);
     if(!token){
       res.json({error: true, data: {message: 'Push failed!'}});
     }else {
