@@ -12,8 +12,6 @@ var options = {
 };
 var apnConnection = new apn.Connection(options);
 
-var myDevice = new apn.Device('3206c774828e82267184ae63fdbf5784c2e042b8fac64756c79c4d3d73305deb');
-
 // application routing
 var router = express.Router();
 // body-parser middleware for handling request variables
@@ -40,6 +38,31 @@ var Discounts = Bookshelf.Collection.extend({
   model: Discount
 });
 
+function sendPushForDevice(withToken){
+  //Sending push...
+  // var myDevice = new apn.Device('3206c774828e82267184ae63fdbf5784c2e042b8fac64756c79c4d3d73305deb');
+  var myDevice = new apn.Device(withToken);
+  var note = new apn.Notification();
+
+  note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+  note.badge = 3;
+  note.sound = "ping.aiff";
+  note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+  note.payload = {'messageFrom': 'Caroline'};
+
+  apnConnection.pushNotification(note, myDevice);
+  //Push end here ...
+}
+
+router.route('/pushTest')
+  .get(function(req, res){
+    var token = req.param.dToken;
+    if(!token){
+      res.json({error: true, data: {message: 'Push failed!'}});
+    }else {
+      sendPushForDevice(token);
+    }
+  });
 
 router.route('/discounts')
   .get(function(req, res){
@@ -47,18 +70,6 @@ router.route('/discounts')
     .fetch()
     .then(function(collection){
       res.json({error: false, data: collection.toJSON()});
-      console.log('Trying push...');
-      //Sending push...
-      var note = new apn.Notification();
-
-      note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-      note.badge = 3;
-      note.sound = "ping.aiff";
-      note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-      note.payload = {'messageFrom': 'Caroline'};
-
-      apnConnection.pushNotification(note, myDevice);
-      //Push end here ...
 
     })
     .catch(function (err) {
