@@ -40,7 +40,7 @@ var Discounts = Bookshelf.Collection.extend({
 });
 
 //List of beacons
-var placesByBeacons = {"15212:31506": 'grocery', "48071:25324": 'lifestyle', "45153:9209":'produce'};
+var placesByBeacons = {'15212:31506': 'grocery', '48071:25324': 'lifestyle', '45153:9209':'produce'};
 
 function sendPushForDevice(withToken, pushMessage, callback){
   //Sending push...
