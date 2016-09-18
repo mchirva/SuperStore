@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var apn = require('apn');
+var push = require('modelObject');
 var options = {
         cert: 'keys/cert.pem',
         key: 'keys/key.pem',
@@ -38,17 +39,25 @@ var Discounts = Bookshelf.Collection.extend({
   model: Discount
 });
 
-function sendPushForDevice(withToken, callback){
+//List of beacons
+var placesByBeacons = {'15212:31506': 'grocery', '48071:25324': 'lifestyle', '45153:9209':'produce'};
+
+function sendPushForDevice(withToken, pushMessage, callback){
   //Sending push...
   // var myDevice = new apn.Device('3206c774828e82267184ae63fdbf5784c2e042b8fac64756c79c4d3d73305deb');
   var myDevice = new apn.Device(withToken);
   var note = new apn.Notification();
 
-  note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-  note.badge = 3;
-  note.sound = "ping.aiff";
-  note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-  note.payload = {'messageFrom': 'Caroline'};
+  // note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+  // note.badge = 3;
+  // note.sound = "ping.aiff";
+  // note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+  // note.payload = {'messageFrom': 'Caroline'};
+  note.expiry = pushMessage.expiry;
+  note.badge = pushMessage.badge;
+  note.sound = pushMessage.sound;
+  note.alert = pushMessage.alert;
+  note.payload = pushMessage.payload;
 
   apnConnection.pushNotification(note, myDevice);
   callback();
@@ -58,11 +67,12 @@ function sendPushForDevice(withToken, callback){
 router.route('/pushTest')
   .post(function(req, res){
     var token = req.body.dToken;
-    console.log(token);
+    var beaconID = req.body.beaconID;
     if(!token){
       res.json({error: true, data: {message: 'Push failed!'}});
     }else {
-      sendPushForDevice(token, function() {
+      var pushMessage = new push.PushMessage('New message from beacon', {'messageFrom': 'Falcon2'});
+      sendPushForDevice(token, pushMessage, function() {
         res.json({error: false, data: {message: 'Push sent!'}});
       });
     }
