@@ -72,9 +72,8 @@ router.route('/pushTest')
       res.json({error: true, data: {message: 'Push failed!'}});
     }else {
       console.log(beaconID);
-      console.log(placesByBeacons.beaconID);
       console.log(placesByBeacons["15212:31506"]);
-      console.log(placesByBeacons[beaconID]);
+      console.log(placesByBeacons[String(beaconID)]);
       Discount.forge({region: placesByBeacons[beaconID]})
       .fetch()
       .then(function (discount) {
