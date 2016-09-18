@@ -40,7 +40,7 @@ var Discounts = Bookshelf.Collection.extend({
 });
 
 //List of beacons
-var placesByBeacons = {'15212:31506': 'grocery', '48071:25324': 'lifestyle', '45153:9209':'produce'};
+var placesByBeacons = {"15212:31506": 'grocery', "48071:25324": 'lifestyle', "45153:9209":'produce'};
 
 function sendPushForDevice(withToken, pushMessage, callback){
   //Sending push...
@@ -72,6 +72,8 @@ router.route('/pushTest')
       res.json({error: true, data: {message: 'Push failed!'}});
     }else {
       console.log(beaconID);
+      console.log(placesByBeacons.beaconID);
+      console.log(placesByBeacons["15212:31506"]);
       console.log(placesByBeacons[beaconID]);
       Discount.forge({region: placesByBeacons[beaconID]})
       .fetch()
