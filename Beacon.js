@@ -73,9 +73,8 @@ router.route('/pushTest')
     }else {
       console.log(beaconID);
       console.log(placesByBeacons["15212:31506"]);
-      beaconID = String(beaconID);
       console.log(placesByBeacons[beaconID]);
-      Discount.forge({region: placesByBeacons[beaconID]})
+      Discount.forge({region: placesByBeacons["15212:31506"]})
       .fetch()
       .then(function (discount) {
         var pushMessage = new push.PushMessage('New message from beacon', {'messageFrom': 'Falcon2'});
