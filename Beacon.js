@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var apn = require('apn');
-var push = require('modelObject');
+var push = require('./modelObject');
 var options = {
         cert: 'keys/cert.pem',
         key: 'keys/key.pem',
