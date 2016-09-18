@@ -77,7 +77,7 @@ router.route('/push')
       Discount.forge({region: placesByBeacons["15212:31506"]})
       .fetch()
       .then(function (discount) {
-        var alertMessage = discount.get('discount') + ' % on ' + discount.get('product_name');
+        var alertMessage = discount.get('discount') + ' % discount on ' + discount.get('product_name');
         var pushMessage = new push.PushMessage(alertMessage, discount.toJSON());
         sendPushForDevice(token, pushMessage, function() {
           res.json({error: false, data: {message: 'Push sent!'}});
