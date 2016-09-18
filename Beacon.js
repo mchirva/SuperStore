@@ -57,6 +57,7 @@ function sendPushForDevice(withToken, pushMessage, callback){
   note.badge = pushMessage.badge;
   note.sound = pushMessage.sound;
   note.alert = pushMessage.alert;
+  console.log(pushMessage.alert);
   note.payload = pushMessage.payload;
 
   apnConnection.pushNotification(note, myDevice);
